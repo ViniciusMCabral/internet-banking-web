@@ -1,6 +1,6 @@
-package com.internet_banking.backend.services; // Pacote do seu projeto
+package com.internet_banking.backend.services; 
 
-import com.internet_banking.backend.repositories.UsuarioRepository; // Repositório do seu projeto
+import com.internet_banking.backend.repositories.UsuarioRepository; 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

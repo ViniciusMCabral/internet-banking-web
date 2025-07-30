@@ -1,6 +1,6 @@
 package com.internet_banking.backend.services;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.internet_banking.backend.client.EmailClient;
@@ -19,14 +19,14 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final ContaRepository contaRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final EmailClient emailClient; 
     
-    public UsuarioService(UsuarioRepository usuarioRepository, ContaRepository contaRepository, EmailClient emailClient) {
+    public UsuarioService(UsuarioRepository usuarioRepository, ContaRepository contaRepository, EmailClient emailClient, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.contaRepository = contaRepository;
         this.emailClient = emailClient; 
-        this.passwordEncoder = new BCryptPasswordEncoder(); 
+        this.passwordEncoder = passwordEncoder; 
     }
 
     @Transactional

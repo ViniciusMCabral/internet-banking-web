@@ -1,23 +1,26 @@
 package com.internet_banking.backend.services;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import com.internet_banking.backend.client.EmailClient;
+import com.internet_banking.backend.dtos.ContaDTO;
 import com.internet_banking.backend.models.Conta;
 import com.internet_banking.backend.models.Operacao;
 import com.internet_banking.backend.models.TipoOperacao;
 import com.internet_banking.backend.repositories.ContaRepository;
 import com.internet_banking.backend.repositories.OperacaoRepository;
+
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service; 
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
-@Service 
+@Service
 public class OperacaoService {
 
     private static final Logger logger = LoggerFactory.getLogger(OperacaoService.class);
@@ -32,11 +35,10 @@ public class OperacaoService {
     }
 
     @Transactional
-    public void depositar(String numero, BigDecimal valor) {
+    public ContaDTO depositar(String numero, BigDecimal valor) { 
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("O valor do depósito deve ser positivo.");
         }
-
         Conta conta = contaRepository.findByNumero(numero)
                 .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada: " + numero));
 
@@ -48,31 +50,33 @@ public class OperacaoService {
 
         String body = String.format("Depósito de R$ %s. Saldo atual: R$ %s", valor, conta.getSaldo());
         emailClient.enviar(conta.getUsuario().getEmail(), "Depósito Realizado", body);
+
+        return new ContaDTO(conta); 
     }
 
     @Transactional
-    public void sacar(String numero, BigDecimal valor) {
+    public ContaDTO sacar(String numero, BigDecimal valor) { 
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("O valor do saque deve ser positivo.");
         }
         Conta conta = contaRepository.findByNumero(numero)
                 .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada: " + numero));
-        
-        debitarDaConta(conta, valor, TipoOperacao.SAQUE, "Saque de conta");
+
+        return debitarDaConta(conta, valor, TipoOperacao.SAQUE, "Saque de conta");
     }
 
     @Transactional
-    public void pagamento(String numero, BigDecimal valor, String descricao) {
+    public ContaDTO pagamento(String numero, BigDecimal valor, String descricao) { 
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("O valor do pagamento deve ser positivo.");
         }
         Conta conta = contaRepository.findByNumero(numero)
                 .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada: " + numero));
 
-        debitarDaConta(conta, valor, TipoOperacao.PAGAMENTO, descricao);
+        return debitarDaConta(conta, valor, TipoOperacao.PAGAMENTO, descricao);
     }
-    
-    private void debitarDaConta(Conta conta, BigDecimal valor, TipoOperacao tipo, String descricao) {
+
+    private ContaDTO debitarDaConta(Conta conta, BigDecimal valor, TipoOperacao tipo, String descricao) { 
         if (conta.getSaldo().compareTo(valor) < 0) {
             throw new IllegalArgumentException("Saldo insuficiente para a operação.");
         }
@@ -84,6 +88,8 @@ public class OperacaoService {
 
         String body = String.format("Operação de %s no valor de R$ %s realizada. Saldo atual: R$ %s", tipo.toString(), valor, conta.getSaldo());
         emailClient.enviar(conta.getUsuario().getEmail(), "Operação Realizada", body);
+
+        return new ContaDTO(conta); 
     }
 
     private void registrarOperacao(Conta conta, TipoOperacao tipo, BigDecimal valor, String descricao) {
@@ -95,7 +101,8 @@ public class OperacaoService {
         return operacaoRepository.buscarExtrato(numero, tipo, de, ate, pageable);
     }
 
-    public java.util.List<Operacao> extrato(String numero, TipoOperacao tipo, LocalDateTime de, LocalDateTime ate) {
-        return operacaoRepository.buscarExtrato(numero, tipo, de, ate);
+    public Conta getContaPorEmail(String email) {
+        return contaRepository.findByUsuarioEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada para o e-mail: " + email));
     }
 }

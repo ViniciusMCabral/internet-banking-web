@@ -15,7 +15,7 @@ import java.util.Collections;
 @Table(name = "usuarios")
 public class Usuario implements UserDetails {
 
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
