@@ -1,43 +1,45 @@
 package com.internet_banking.backend.models;
 
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 
-import com.internet_banking.backend.dtos.ContaDTO;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 
-@Entity
+@Entity(name = "contas")
 public class Conta {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String numero;
 
-    private String agencia = "0001";
+    @Column(nullable = false, updatable = false)
+    private String agencia;
 
-    private BigDecimal saldo = BigDecimal.ZERO;
+    @Column(nullable = false)
+    private BigDecimal saldo;
 
     @OneToOne
-    @JoinColumn(name = "usuario_id", unique = true)
+    @JoinColumn(name = "usuario_id", unique = true, nullable = false)
     private Usuario usuario;
     
-	public Conta(Long id, String numero, String agencia, BigDecimal saldo, Usuario usuario) {
-		super();
-		this.id = id;
+    public Conta() {
+    }
+    
+	public Conta(String numero, Usuario usuario) {
 		this.numero = numero;
-		this.agencia = agencia;
-		this.saldo = saldo;
 		this.usuario = usuario;
+		this.agencia = "0001";
+		this.saldo = BigDecimal.ZERO;
 	}
 	
-	public Conta(ContaDTO contaDTO) {
-		this.id = contaDTO.id();
-		this.numero = contaDTO.numero();
-		this.agencia = contaDTO.agencia();
-		this.saldo = contaDTO.saldo();
-	}
-
 	public Long getId() {
 		return id;
 	}

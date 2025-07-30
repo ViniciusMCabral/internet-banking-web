@@ -2,7 +2,6 @@ package com.internet_banking.backend.dtos;
 
 import java.math.BigDecimal;
 
-import com.internet_banking.backend.models.Conta;
 import com.internet_banking.backend.models.Operacao;
 import com.internet_banking.backend.models.TipoOperacao;
 

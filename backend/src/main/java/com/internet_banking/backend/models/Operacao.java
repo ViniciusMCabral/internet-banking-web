@@ -3,8 +3,7 @@ package com.internet_banking.backend.models;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.internet_banking.backend.dtos.OperacaoDTO;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -14,15 +13,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
-@Entity
+@Entity(name = "operacoes")
 public class Operacao {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TipoOperacao tipo;
-
+    
+    @Column(nullable = false)
     private BigDecimal valor;
 
     private LocalDateTime dataHora = LocalDateTime.now();
@@ -30,25 +32,19 @@ public class Operacao {
     private String descricao;
 
     @ManyToOne
-    @JoinColumn(name = "conta_id")
+    @JoinColumn(name = "conta_id", nullable = false)
     private Conta conta;
 
-	public Operacao(Long id, TipoOperacao tipo, BigDecimal valor, String descricao, Conta conta) {
-		super();
-		this.id = id;
+    public Operacao() {
+    }
+    
+	public Operacao(TipoOperacao tipo, BigDecimal valor, String descricao, Conta conta) {
 		this.tipo = tipo;
 		this.valor = valor;
 		this.descricao = descricao;
 		this.conta = conta;
 	}
 	
-	public Operacao(OperacaoDTO operacaoDTO) {
-		this.id = operacaoDTO.id();
-		this.tipo = operacaoDTO.tipo();
-		this.valor = operacaoDTO.valor();
-		this.descricao = operacaoDTO.descricao();
-	}
-
 	public Long getId() {
 		return id;
 	}

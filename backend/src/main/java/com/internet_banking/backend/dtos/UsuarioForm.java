@@ -7,9 +7,9 @@ import com.internet_banking.backend.models.Usuario;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public record UsuarioForm(Long id, @NotBlank String nome, @CPF String cpf, @Email String email, String senhaHash) {
+public record UsuarioForm(Long id, @NotBlank String nome, @CPF String cpf, @Email String email, @NotBlank String senha) {
 	
 	public UsuarioForm(Usuario usuario) {
-		this(usuario.getId(), usuario.getNome(), usuario.getCpf(), usuario.getEmail(), usuario.getSenhaHash());
+		this(usuario.getId(), usuario.getNome(), usuario.getCpf(), usuario.getEmail(), null);
 	}
 }

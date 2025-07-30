@@ -1,106 +1,109 @@
-package com.internet_banking.backend.models;
+package com.internet_banking.backend.models; 
 
-import java.time.LocalDateTime;
-
-import org.hibernate.validator.constraints.br.CPF;
-
-import com.internet_banking.backend.dtos.UsuarioForm;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
 
 @Entity
-public class Usuario {
+@Table(name = "usuarios")
+public class Usuario implements UserDetails {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
-	@NotBlank
-	private String nome;
-	
-	@CPF
-	@Column(unique = true, nullable = false)
-	private String cpf;
-	
-	@Email
-	@Column(unique = true, nullable = false)
-	private String email;
-	
-	@Column(nullable = false)
-	private String senhaHash;
-	
-	private LocalDateTime dataCadastro = LocalDateTime.now();
-		
-	public Usuario(Long id, @NotBlank String nome, @CPF String cpf, @Email String email, String senhaHash) {
-		super();
-		this.id = id;
-		this.nome = nome;
-		this.cpf = cpf;
-		this.email = email;
-		this.senhaHash = senhaHash;
-	}
-	
-	public Usuario(UsuarioForm usuarioForm) {
-		this.id = usuarioForm.id();
-		this.nome = usuarioForm.nome();
-		this.cpf = usuarioForm.cpf();
-		this.email = usuarioForm.email();
-		this.senhaHash = usuarioForm.senhaHash();
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	public Long getId() {
-		return id;
-	}
+    @NotBlank
+    @Column(nullable = false)
+    private String nome;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @CPF
+    @Column(unique = true, nullable = false, length = 11)
+    private String cpf;
 
-	public String getNome() {
-		return nome;
-	}
+    @Email
+    @Column(unique = true, nullable = false)
+    private String email;
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    @Column(nullable = false)
+    private String senhaHash;
 
-	public String getCpf() {
-		return cpf;
-	}
+    @Column(updatable = false, nullable = false)
+    private LocalDateTime dataCadastro = LocalDateTime.now();;
 
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
+    public Usuario() {
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public Usuario(@NotBlank String nome, @CPF String cpf, @Email String email, String senhaHash) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.email = email;
+        this.senhaHash = senhaHash;
+    }
+    
+    public Long getId() {
+        return id;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getSenhaHash() {
-		return senhaHash;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public void setSenhaHash(String senhaHash) {
-		this.senhaHash = senhaHash;
-	}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	public LocalDateTime getDataCadastro() {
-		return dataCadastro;
-	}
+    public String getCpf() {
+        return cpf;
+    }
 
-	public void setDataCadastro(LocalDateTime dataCadastro) {
-		this.dataCadastro = dataCadastro;
-	}
-	
-	
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setSenhaHash(String senhaHash) {
+        this.senhaHash = senhaHash;
+    }
+
+    public LocalDateTime getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(LocalDateTime dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senhaHash;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+    
 }
