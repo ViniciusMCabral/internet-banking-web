@@ -87,10 +87,16 @@ public class ContaController {
 
     private void verificarDonoDaConta(Authentication authentication, String numeroConta) {
         String emailUsuarioLogado = authentication.getName();
+
         ContaDTO contaDoUsuario = usuarioService.getContaDoUsuario(emailUsuarioLogado);
+        
+        if (contaDoUsuario == null) {
+            throw new AccessDeniedException("Conta do usuário não encontrada.");
+        }
         
         if (!contaDoUsuario.numero().equals(numeroConta)) {
             throw new AccessDeniedException("Acesso negado. Você não tem permissão para operar nesta conta.");
         }
     }
+
 }

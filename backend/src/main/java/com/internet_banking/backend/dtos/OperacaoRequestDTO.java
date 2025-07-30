@@ -1,4 +1,4 @@
-package com.internet_banking.backend.dtos; // Ou seu pacote de DTOs
+package com.internet_banking.backend.dtos; 
 
 import java.math.BigDecimal;
 

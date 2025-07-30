@@ -48,6 +48,6 @@ public class JWTokenService {
     }
 
     private Instant dataExpiracao() {
-    	return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.UTC);
+    	return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));    
     }
 }
