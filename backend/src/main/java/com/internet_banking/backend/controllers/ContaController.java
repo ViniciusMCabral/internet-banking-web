@@ -41,8 +41,9 @@ public class ContaController {
 
     @PostMapping("/{numeroConta}/depositos")
     @Operation(summary = "Realiza um depósito em uma conta")
-    public ResponseEntity<ContaDTO> depositar(@PathVariable String numeroConta, @Valid @RequestBody OperacaoRequestDTO dto) {
-        ContaDTO contaAtualizada = operacaoService.depositar(numeroConta, dto.valor());
+    public ResponseEntity<ContaDTO> depositar(@PathVariable String numeroConta, @Valid @RequestBody OperacaoRequestDTO dto, Authentication authentication) {
+        verificarDonoDaConta(authentication, numeroConta);
+    	ContaDTO contaAtualizada = operacaoService.depositar(numeroConta, dto.valor());
         return ResponseEntity.ok(contaAtualizada);
     }
 

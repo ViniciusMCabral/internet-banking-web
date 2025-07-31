@@ -31,18 +31,21 @@ public class UsuarioService {
 
     @Transactional
     public ContaDTO cadastrar(UsuarioForm usuarioForm) {
+        String cpfSemFormatacao = usuarioForm.cpf().replaceAll("[^\\d]", "");
+
+        if (usuarioRepository.existsByCpf(cpfSemFormatacao)) {
+            throw new IllegalArgumentException("CPF já cadastrado");
+        }
+        
         if (usuarioRepository.existsByEmail(usuarioForm.email())) {
             throw new IllegalArgumentException("Email já cadastrado");
-        }
-        if (usuarioRepository.existsByCpf(usuarioForm.cpf())) {
-            throw new IllegalArgumentException("CPF já cadastrado");
         }
 
         Usuario novoUsuario = new Usuario();
         novoUsuario.setNome(usuarioForm.nome());
-        novoUsuario.setEmail(usuarioForm.email());
-        novoUsuario.setCpf(usuarioForm.cpf());
-
+        novoUsuario.setEmail(usuarioForm.email());      
+        novoUsuario.setCpf(cpfSemFormatacao);
+        
         String senhaHasheada = passwordEncoder.encode(usuarioForm.senha());
         novoUsuario.setSenhaHash(senhaHasheada);
 

@@ -17,9 +17,6 @@ public class EmailService {
     private final EmailRepository emailRepository;
     private final JavaMailSender emailSender;
 
-    @Value("${spring.mail.username}")
-    private String mailFrom;
-
     public EmailService(EmailRepository emailRepository, JavaMailSender emailSender) {
         this.emailRepository = emailRepository;
         this.emailSender = emailSender;
@@ -30,7 +27,7 @@ public class EmailService {
 
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(mailFrom); 
+            message.setFrom("no-reply@internetbanking.com"); 
             message.setTo(dto.to()); 
             message.setSubject(dto.subject());
             message.setText(dto.body());

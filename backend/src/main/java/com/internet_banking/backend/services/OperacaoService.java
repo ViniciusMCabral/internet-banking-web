@@ -49,7 +49,7 @@ public class OperacaoService {
         logger.info("Depósito realizado na conta {} no valor de {}", numero, valor);
 
         String body = String.format("Depósito de R$ %s. Saldo atual: R$ %s", valor, conta.getSaldo());
-        emailClient.enviar(conta.getUsuario().getEmail(), "Depósito Realizado", body);
+        emailClient.enviar(conta.getUsuario().getEmail(), "Operação Realizada", body);
 
         return new ContaDTO(conta); 
     }

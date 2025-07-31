@@ -17,8 +17,7 @@ public class EmailClient {
     private final RestTemplate restTemplate;
     private final String emailServiceUrl;
 
-    public EmailClient(RestTemplate restTemplate,
-                       @Value("${microservico.email.url}") String emailServiceUrl) {
+    public EmailClient(RestTemplate restTemplate, @Value("${microservico.email.url}") String emailServiceUrl) {
         this.restTemplate = restTemplate;
         this.emailServiceUrl = emailServiceUrl;
     }
