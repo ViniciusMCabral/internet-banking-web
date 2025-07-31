@@ -12,22 +12,22 @@ import com.internet_banking.backend.models.Operacao;
 import com.internet_banking.backend.models.TipoOperacao;
 
 public interface OperacaoRepository extends JpaRepository<Operacao, Long>{
-	@Query("select o from Operacao o where o.conta.numero = :numero " +
-            "and (:de is null or o.dataHora >= :de) " +
-            "and (:ate is null or o.dataHora <= :ate) " +
-            "and (:tipo is null or o.tipo = :tipo)")
-    Page<Operacao> buscarExtrato(@Param("numero") String numero,
-                                 @Param("tipo") TipoOperacao tipo,
-                                 @Param("de") LocalDateTime de,
-                                 @Param("ate") LocalDateTime ate,
-                                 Pageable pageable);
+	@Query("SELECT o FROM Operacao o WHERE o.conta.numero = :numero " +
+	           "AND o.dataHora >= COALESCE(:de, o.dataHora) " +
+	           "AND o.dataHora <= COALESCE(:ate, o.dataHora) " +
+	           "AND o.tipo = COALESCE(:tipo, o.tipo)")
+	    Page<Operacao> buscarExtrato(@Param("numero") String numero,
+	                                 @Param("tipo") TipoOperacao tipo,
+	                                 @Param("de") LocalDateTime de,
+	                                 @Param("ate") LocalDateTime ate,
+	                                 Pageable pageable);
 
-    @Query("select o from Operacao o where o.conta.numero = :numero " +
-            "and (:de is null or o.dataHora >= :de) " +
-            "and (:ate is null or o.dataHora <= :ate) " +
-            "and (:tipo is null or o.tipo = :tipo)")
-    java.util.List<Operacao> buscarExtrato(@Param("numero") String numero,
-                                           @Param("tipo") TipoOperacao tipo,
-                                           @Param("de") LocalDateTime de,
-                                           @Param("ate") LocalDateTime ate);
+	@Query("SELECT o FROM Operacao o WHERE o.conta.numero = :numero " +
+	           "AND o.dataHora >= COALESCE(:de, o.dataHora) " +
+	           "AND o.dataHora <= COALESCE(:ate, o.dataHora) " +
+	           "AND o.tipo = COALESCE(:tipo, o.tipo)")
+	    java.util.List<Operacao> buscarExtrato(@Param("numero") String numero,
+	                                           @Param("tipo") TipoOperacao tipo,
+	                                           @Param("de") LocalDateTime de,
+	                                           @Param("ate") LocalDateTime ate);
 }
