@@ -53,7 +53,7 @@ function ExtratoPage() {
   return (
     <>
       <header className="main-header">
-        <div className="header-content container">
+        <div className="header-content">
           <NavLink to="/home" className="header-logo">Internet Banking</NavLink>
           {isAuthenticated && (
             <div className="header-right">

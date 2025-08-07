@@ -12,6 +12,13 @@ function CadastroPage() {
 
   const handleCadastro = async (e) => {
     e.preventDefault();
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert("Por favor, insira um endereço de e-mail válido.");
+      return; 
+    }
+
     setLoading(true);
 
     try {
@@ -20,7 +27,6 @@ function CadastroPage() {
       navigate('/login');
     } catch (error) {
       const msgErro = error.response?.data?.error || "Erro ao realizar cadastro.";
-
       alert(msgErro);
     } finally {
       setLoading(false);
@@ -30,7 +36,7 @@ function CadastroPage() {
   return (
     <div className="form-container">
       <h2>Cadastro de Novo Usuário</h2>
-      <form onSubmit={handleCadastro}>
+      <form onSubmit={handleCadastro} noValidate>
         <div className="form-group">
           <label htmlFor="nome">Nome Completo</label>
           <input id="nome" type="text" value={nome} onChange={(e) => setNome(e.target.value)} required />
