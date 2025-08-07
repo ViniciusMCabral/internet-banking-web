@@ -10,12 +10,13 @@ function HomePage() {
   const { isAuthenticated, logout } = useAuth();
   const [conta, setConta] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [erro, setErro] = useState('');
 
   useEffect(() => {
     getMinhaConta()
       .then(setConta)
-      .catch(() => setErro('Falha ao carregar dados da conta.'))
+      .catch(() => {
+        alert('Falha ao carregar dados da conta.');
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -23,15 +24,11 @@ function HomePage() {
     setConta(contaAtualizada);
   };
 
-  if (loading) return <p>Carregando...</p>;
-  if (erro) return <p className="error-message">{erro}</p>;
-
   return (
     <>
       <header className="main-header">
         <div className="header-content container">
           <NavLink to="/home" className="header-logo">Internet Banking</NavLink>
-
           {isAuthenticated && (
             <div className="header-right">
               <nav className="main-navbar">
@@ -49,8 +46,11 @@ function HomePage() {
       </header>
 
       <main className="container">
-        {conta ? (
+        {loading ? (
+          <p>Carregando dados da conta...</p>
+        ) : conta ? (
           <>
+            <h2>Painel de Controle</h2>
             <p><strong>Titular:</strong> {conta.usuario}</p>
             <p><strong>Agência:</strong> {conta.agencia} | <strong>Conta:</strong> {conta.numero}</p>
             <h3>Saldo: R$ {conta.saldo.toFixed(2)}</h3>
@@ -63,7 +63,9 @@ function HomePage() {
               <PagamentoForm conta={conta} onOperacaoSucesso={handleOperacaoSucesso} />
             </div>
           </>
-        ) : <p>Não foi possível carregar os dados da conta.</p>}
+        ) : (
+          <p>Não foi possível carregar os dados da conta.</p>
+        )}
       </main>
     </>
   );

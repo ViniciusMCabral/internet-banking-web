@@ -10,7 +10,6 @@ function ExtratoPage() {
   const [paginaInfo, setPaginaInfo] = useState({ pageNumber: 0, totalPages: 0 });
   const [filtros, setFiltros] = useState({ tipo: '', dataInicio: '', dataFim: '' });
   const [loading, setLoading] = useState(true);
-  const [erro, setErro] = useState('');
 
   const carregarExtrato = async (numeroPagina = 0) => {
     setLoading(true);
@@ -30,7 +29,7 @@ function ExtratoPage() {
         isLast: dadosExtrato.last,
       });
     } catch (error) {
-      setErro('Não foi possível carregar o extrato.');
+      alert('Não foi possível carregar o extrato.');
     } finally {
       setLoading(false);
     }
@@ -56,7 +55,6 @@ function ExtratoPage() {
       <header className="main-header">
         <div className="header-content container">
           <NavLink to="/home" className="header-logo">Internet Banking</NavLink>
-
           {isAuthenticated && (
             <div className="header-right">
               <nav className="main-navbar">

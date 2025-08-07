@@ -7,21 +7,21 @@ function CadastroPage() {
   const [cpf, setCpf] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [erro, setErro] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleCadastro = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setErro('');
+
     try {
       await cadastrarUsuario({ nome, cpf, email, senha });
       alert('Cadastro realizado com sucesso!');
       navigate('/login');
     } catch (error) {
       const msgErro = error.response?.data?.error || "Erro ao realizar cadastro.";
-      setErro(msgErro);
+
+      alert(msgErro);
     } finally {
       setLoading(false);
     }
@@ -47,9 +47,7 @@ function CadastroPage() {
           <label htmlFor="senha">Senha</label>
           <input id="senha" type="password" value={senha} onChange={(e) => setSenha(e.target.value)} required />
         </div>
-        
-        {erro && <p className="error-message">{erro}</p>}
-        
+
         <button type="submit" className="btn" disabled={loading}>
           {loading ? 'Cadastrando...' : 'Cadastrar'}
         </button>
