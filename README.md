@@ -70,6 +70,7 @@ Trabalho Internet Banking (INF012)
     Verifique no arquivo de configuração do Axios (src/services/axios.js) se a baseURL está configurada para apontar para o backend (http://localhost:8080).
 
     Instale as dependências: 
+            
         npm install.
 
     Inicie o servidor de desenvolvimento: npm run dev. Ele deverá iniciar na porta 5173.
